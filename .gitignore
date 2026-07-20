@@ -1,0 +1,5 @@
+# Private ApplyPilot working data. Never commit candidate files or application history.
+.applypilot-private/
+
+# Rendered resume/PDF inspection artifacts may contain personal information.
+tmp/pdfs/
