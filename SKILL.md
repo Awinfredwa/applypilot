@@ -1,11 +1,26 @@
 ---
 name: applypilot
-description: "A reusable job application workflow for Codex and other AI agents. Use when a user wants to set up or run an AI-assisted job search system: collecting a candidate profile, creating an application dashboard, defining screening and resume-routing rules, finding and ranking job leads, applying to jobs within explicit safety boundaries, recording outcomes, triaging blockers, or iterating a job application workflow."
+description: "A reusable job application workflow for Codex and other AI agents. Use when a user wants to set up or run an AI-assisted job search system: a simple daily LinkedIn internship/job routine for non-technical users (\"Set up ApplyPilot for me\", \"ApplyPilot: apply\", the daily search task), or the full workflow: collecting a candidate profile, creating an application dashboard, defining screening and resume-routing rules, finding and ranking job leads, applying to jobs within explicit safety boundaries, recording outcomes, triaging blockers, or iterating a job application workflow."
 ---
 
 # ApplyPilot
 
 ApplyPilot is a job application operating workflow for AI agents. It helps users turn job searching into a repeatable system: profile, dashboard, screening rules, resume strategy, application execution, blocker triage, and follow-up.
+
+## Pick the Right Path
+
+Check this first:
+
+| Situation | Read and follow |
+|---|---|
+| The user pasted the README quick-start message ("Set up ApplyPilot for me …"), or wants the simple daily LinkedIn routine | `references/quickstart-setup.md` |
+| The scheduled task says "Run my ApplyPilot daily job search" | `references/daily-linkedin-run.md`, section "Daily find run" |
+| A quick-start user replies `apply` to a report, or says "ApplyPilot: …" (apply, pause, add a search, answer a question, and so on) | `references/daily-linkedin-run.md`, sections "Apply session" and "Changing things later" |
+| Anything else: multiple job sites, resume tailoring, Precision/Volume modes, the full dashboard | The rest of this file |
+
+Quick-start users are often not technical. Do all file, folder, and repo work yourself, and talk in plain language. Their private files live in their ApplyPilot folder (usually `~/ApplyPilot`), never in this repo.
+
+The Core Contract and Safety sections below apply to every path. In particular, the unattended daily run only finds and screens jobs, and every application is submitted only after the user says yes to its summary.
 
 ## Core Contract
 
@@ -40,6 +55,8 @@ Use the templates in `templates/` to create user-owned files:
 - `resume_routing.template.md`
 - `answer_bank.template.md`
 - `dashboard-template/*.csv`
+
+Quick-start users use the smaller set in `templates/internship/` instead (see `references/quickstart-setup.md`).
 
 ### 2. Screen Before Applying
 

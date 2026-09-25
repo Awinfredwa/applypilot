@@ -6,6 +6,10 @@ This file is for any coding agent that receives the GitHub repo directly. Codex 
 
 ## Start Here
 
+If the user pasted the README quick-start message ("Set up ApplyPilot for me …"), they are likely not technical. Read `SKILL.md` (for the safety contract), then follow `references/quickstart-setup.md`. Scheduled daily runs and "ApplyPilot: …" requests follow `references/daily-linkedin-run.md`.
+
+For everything else:
+
 1. Read `SKILL.md` for the core workflow and safety contract.
 2. For first-time setup, read `references/setup-workflow.md`.
 3. For browser or ATS work, read `references/application-playbook.md`.
@@ -24,7 +28,7 @@ This file is for any coding agent that receives the GitHub repo directly. Codex 
 
 ## User-Owned Outputs
 
-Create or update these from `templates/`:
+Quick-start users get a smaller set from `templates/internship/` (profile, settings, answers, tracker, notes) in their ApplyPilot folder. Full-workflow users get these, from `templates/`:
 
 - Candidate profile.
 - Application rules.

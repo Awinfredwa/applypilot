@@ -51,6 +51,15 @@ Stop or hand off for:
 - Missing resume, portfolio, video, writing sample, or reference materials.
 - Unclear legal, identity, employment, sponsorship, or compensation questions.
 
+## Scheduled Daily Runs
+
+The quick-start daily run (`references/daily-linkedin-run.md`) runs unattended, so it is limited to finding and screening:
+
+- It never opens an application form and never submits anything. Applying happens only in a live apply session, with the user approving each submission.
+- It keeps a modest pace: one tab at a time, a capped number of listings per run, and a daily application cap (10 by default).
+- On any CAPTCHA, security check, "unusual activity" notice, or account warning, it stops all LinkedIn activity, pauses itself for 48 hours, and tells the user. It does not retry or work around it.
+- It never enters passwords or login codes.
+
 ## Submission Counting
 
 Only count an application after explicit evidence.

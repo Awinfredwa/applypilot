@@ -1,0 +1,52 @@
+{
+  "_about": "How ApplyPilot runs for this user. The agent maintains this file; the user changes it by talking to the agent.",
+  "applypilot_settings_version": 1,
+  "repo_url": "https://github.com/Awinfredwa/applypilot",
+  "repo_path": "",
+  "workspace_path": "",
+  "install_method": "",
+  "auto_update": true,
+  "os": "",
+  "timezone": "",
+  "run_time": "12:30",
+  "daily_cap": 10,
+  "apply_yourself_picks_per_day": 3,
+  "linkedin": {
+    "account_name": "",
+    "stored_resume_name": "",
+    "unfollow_company_on_submit": true
+  },
+  "searches": [
+    {
+      "name": "",
+      "keywords": "",
+      "location": "",
+      "remote_only": false,
+      "url": ""
+    }
+  ],
+  "screening": {
+    "good_fit": [],
+    "skip_if": [
+      "Not an internship (full-time, contract, or part-time roles that are not internships).",
+      "Clearly senior: Senior, Staff, Principal, Lead, Director, Head, or VP roles. Intern titles that contain 'Manager' or 'Engineer' are fine.",
+      "Requires a graduation date, degree level, or enrollment status the user does not have.",
+      "Says it cannot sponsor, requires citizenship, or requires a security clearance, when the user's work authorization facts rule them out.",
+      "Location is outside the user's locations and the job is not remote, unless the user is open to relocating.",
+      "Commission-only, unpaid when the user wants paid roles, or looks like a scam or a staffing-agency repost.",
+      "Already applied, closed, or a duplicate or repost of a job already in the tracker."
+    ],
+    "ask_me_if": [
+      "Sponsorship or work authorization wording is unclear for this user.",
+      "The job needs relocation and the user's relocation answer is unknown.",
+      "A cover letter, portfolio, writing sample, or video is required."
+    ]
+  },
+  "state": {
+    "setup_complete": false,
+    "last_find_run": "",
+    "last_find_run_status": "",
+    "paused_until": "",
+    "update_failures_in_a_row": 0
+  }
+}

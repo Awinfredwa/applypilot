@@ -1,0 +1,72 @@
+{
+  "_about": "Private candidate facts for the ApplyPilot quick start. Lives in the user's ApplyPilot folder, never in the repo. Empty or null means unknown: ask the user before using it. Never guess.",
+  "candidate": {
+    "full_name": "",
+    "preferred_name": "",
+    "email": "",
+    "phone": "",
+    "city_state_country": "",
+    "linkedin_url": "",
+    "portfolio_url": "",
+    "github_url": ""
+  },
+  "education": [
+    {
+      "school": "",
+      "degree": "",
+      "major": "",
+      "minor": "",
+      "start": "",
+      "expected_graduation": "",
+      "currently_enrolled": null,
+      "gpa": "",
+      "gpa_policy": "Only enter GPA if the user provided it and the form requires it."
+    }
+  ],
+  "search": {
+    "job_type": "internship",
+    "season": "",
+    "available_start": "",
+    "available_end": "",
+    "target_roles_in_users_words": "",
+    "locations": [],
+    "open_to_remote": null,
+    "open_to_relocate": null
+  },
+  "work_authorization": {
+    "country": "",
+    "status_in_users_words": "",
+    "authorized_to_work": null,
+    "requires_sponsorship_now": null,
+    "requires_sponsorship_future": null,
+    "student_visa": "",
+    "notes": "If a form's wording does not clearly match these facts, ask the user."
+  },
+  "experience_years": {
+    "_rule": "Honest years of experience per skill, confirmed by the user. Used for LinkedIn 'How many years of experience do you have with X?' questions.",
+    "confirmed": false,
+    "table": {},
+    "answer_for_unlisted_skills": null
+  },
+  "pay": {
+    "expected_pay": "",
+    "policy": "ask_me"
+  },
+  "self_id": {
+    "strategy": "prefer_not_to_say",
+    "notes": "Gender, race, veteran, and disability questions: choose 'Prefer not to say' / decline / leave blank when allowed, unless the user explicitly gives answers to store here."
+  },
+  "never_guess": [
+    "legal name",
+    "work authorization",
+    "sponsorship",
+    "graduation date",
+    "enrollment status",
+    "GPA",
+    "pay expectations",
+    "relocation",
+    "years of experience",
+    "voluntary self-identification",
+    "background check or legal questions"
+  ]
+}

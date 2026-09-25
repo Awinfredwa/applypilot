@@ -1,4 +1,4 @@
 interface:
   display_name: "ApplyPilot"
-  short_description: "Reusable AI job application workflow"
-  default_prompt: "Use $applypilot to set up my candidate profile, job dashboard, application rules, and resume strategy."
+  short_description: "Daily LinkedIn job search, set up for you"
+  default_prompt: "Use $applypilot to set up my daily LinkedIn internship search. My resume is attached."
