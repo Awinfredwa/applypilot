@@ -10,7 +10,7 @@ Use this reference when a user pastes the README quick-start message ("Set up Ap
 - When Codex shows a permission prompt, tell the user in one sentence what to click and why, for example: "Codex will ask to let me create an ApplyPilot folder in your home folder. Please click Allow."
 - Keep every message short. Celebrate the finish line, not each step.
 
-Everything in `SKILL.md` still applies: never guess high-impact facts, stop before every final submit, and never bypass CAPTCHA, login, or security checks.
+Everything in `SKILL.md` still applies: never guess high-impact facts, submit without asking only under the daily run's "Auto-apply" rules, and never bypass CAPTCHA, login, or security checks.
 
 ## What the finished setup looks like
 
@@ -70,7 +70,7 @@ Adapt the wording to the user's country and what the resume already answered. Sk
 5. **Skip list.** "Anything I should always skip, such as certain companies, industries, unpaid roles, or on-site only?"
 6. **Experience table.** "LinkedIn forms often ask 'how many years of experience with X'. From your resume I'd answer: {Excel: 1, Python: 1, …}. Is that right? For skills not on this list, should I answer 0, or ask you each time?" Save it as confirmed; set `answer_for_unlisted_skills` only if the user explicitly chooses 0.
 7. **Pay.** "If a form asks your expected pay, what should I say? (Default: I'll ask you each time.)"
-8. **Timing.** "I'll search every day at about {suggested time} (see 'Picking the run time'). Your laptop needs to be on with Chrome open then. Does that work, or is another time better?" Also: "I'll go through up to 10 applications with you a day. OK?"
+8. **Timing.** "I'll search every day at about {suggested time} (see 'Picking the run time'). Your laptop needs to be on with Chrome open then. Does that work, or is another time better?" Also: "After each search I'll send up to 10 Easy Apply applications a day on my own, but only to good-fit jobs where I already know every answer from what you've told me. Anything new waits for you. OK?" If the user says no, set `auto_submit` to `false`.
 
 Tell the user (don't ask): "For optional questions about gender, race, veteran status, or disability, I'll choose 'Prefer not to say'. I'll only enter your GPA if you give it to me and a form requires it."
 
@@ -93,24 +93,24 @@ Always save `run_time` in the user's own timezone (the `timezone` field), becaus
    - If the extension isn't installed or connected, walk the user through it in plain steps: install "Codex" from the Chrome Web Store, sign in, and turn it on.
 2. If LinkedIn isn't logged in, ask the user to log in themselves in Chrome. Never type their password.
 3. Save the logged-in account's display name to `settings.linkedin.account_name`.
-4. Before the practice search, tell the user once, plainly, and wait for an OK: "One thing to know first: LinkedIn's rules don't allow automated tools, and LinkedIn can restrict accounts that use them. I keep a slow, human pace, you approve every application, and I stop for 2 days if LinkedIn shows any warning. That lowers the risk but doesn't remove it. Do you want to go ahead?" If they say no, stop setup and tell them nothing has been sent.
+4. Before the practice search, tell the user once, plainly, and wait for an OK: "One thing to know first: LinkedIn's rules don't allow automated tools, and LinkedIn can restrict accounts that use them. I keep a slow, human pace, only send applications where I know every answer, and stop for 2 days if LinkedIn shows any warning. That lowers the risk but doesn't remove it. Do you want to go ahead?" If they say no, stop setup and tell them nothing has been sent.
 
 ## Step 5: Practice search (no applying)
 
-Run the "Daily find run" from `daily-linkedin-run.md`, with three changes: skip pre-flight checks 1–4 (setup isn't marked complete yet), don't set `last_find_run`, and label the report "Practice run". Aim for about 10 jobs.
+Run the "Daily run" from `daily-linkedin-run.md`, with four changes: skip pre-flight checks 1–4 (setup isn't marked complete yet), skip the "Auto-apply" step, don't set `last_find_run`, and label the report "Practice run". Aim for about 10 jobs.
 
 Show the report and ask: "Do these look like the right kind of jobs? Anything I should skip or add?" Adjust searches and skip rules from the answer. Repeat once if the results were clearly off.
 
 ## Step 6: First application together
 
-Pick the best `Pending` / `Easy Apply` job and run the "Apply session" from `daily-linkedin-run.md` for just that one, with the user watching:
+Pick the best `Pending` / `Easy Apply` job and run the "Apply session" from `daily-linkedin-run.md` for just that one, with the user watching. This is what lets the daily run apply on its own afterwards:
 
-- This is where the resume gets uploaded to LinkedIn for the first time. Tell the user Codex will ask to allow the upload.
-- Answer any new questions with the user and save them.
+- This is where the resume gets uploaded to LinkedIn for the first time and saved as `linkedin.stored_resume_name`. Auto-apply can't run until this is done. Tell the user Codex will ask to allow the upload.
+- Answer any new questions with the user and save them as confirmed. Every answer saved here is one more question auto-apply can handle later.
 - Stop before submit, show the summary, and submit only when the user says yes.
 - Confirm LinkedIn showed "application sent".
 
-If the user doesn't want to send a real application yet, skip this step. The first real apply session will cover the resume upload instead.
+If the user doesn't want to send a real application yet, skip this step and tell them: "I won't send anything on my own until we do one together, because that's when your resume gets saved on LinkedIn." The first apply session covers it instead.
 
 ## Step 7: Schedule the daily search
 
@@ -131,8 +131,8 @@ Send one short final message, for example:
 ```text
 You're all set!
 
-Every day at {time}, I'll check LinkedIn for new {role} internships and send you a short list.
-Reply "apply" and we'll go through them together. About 1–2 minutes each, and nothing is sent without your OK.
+Every day at {time}, I'll check LinkedIn for new {role} internships and apply to the good Easy Apply ones for you (up to 10 a day).
+I only send an application when I already know every answer from what you've told me. Anything new waits for you, and I'll send you a short report of what I sent and what's waiting. Reply "apply" to go through those.
 
 Keep your laptop on with Chrome open around {time}. If it misses a day, it catches up next time.
 
@@ -140,6 +140,7 @@ Anytime, just say things like:
 - "ApplyPilot: also look for data analyst internships"
 - "ApplyPilot: pause until Monday"
 - "ApplyPilot: what did I apply to this week?"
+- "ApplyPilot: stop auto-applying"
 
 Your tracker is the ApplyPilot folder in your home folder (tracker.csv opens in Excel or Google Sheets).
 ```

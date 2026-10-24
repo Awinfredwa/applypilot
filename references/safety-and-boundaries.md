@@ -53,10 +53,12 @@ Stop or hand off for:
 
 ## Scheduled Daily Runs
 
-The quick-start daily run (`references/daily-linkedin-run.md`) runs unattended, so it is limited to finding and screening:
+The quick-start daily run (`references/daily-linkedin-run.md`) runs unattended. With `auto_submit` on (the default), it may send LinkedIn Easy Apply applications without asking, inside tight limits:
 
-- It never opens an application form and never submits anything. Applying happens only in a live apply session, with the user approving each submission.
-- It keeps a modest pace: one tab at a time, a capped number of listings per run, and a daily application cap (10 by default).
+- It sends only when every answer on the form comes from a fact or answer the user already confirmed, the resume is the one the user saved on LinkedIn, and the job is a High or Medium fit. Any new question, file upload, mismatch, or permission prompt means it discards that application and leaves it for the user.
+- It counts an application only after LinkedIn shows explicit confirmation, and the daily report lists everything it sent with the key answers used.
+- The user can turn it off anytime ("ApplyPilot: stop auto-applying"); then every application waits for a live apply session.
+- It keeps a modest pace: one tab at a time, about a minute between applications, a capped number of listings per run, and a daily application cap (10 by default).
 - On any CAPTCHA, security check, "unusual activity" notice, or account warning, it stops all LinkedIn activity, pauses itself for 48 hours, and tells the user. It does not retry or work around it.
 - It never enters passwords or login codes.
 - It never downloads or installs ApplyPilot updates, and it follows its instructions as they were when it started. Updates happen only in a live session: the agent reads the changes, refuses any that loosen these rules, and installs the rest only after the user says yes.

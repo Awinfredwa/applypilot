@@ -2,10 +2,10 @@
 
 Use this reference for the quick-start LinkedIn flow after setup is complete (`state.setup_complete` is `true` in `settings.json`). There are two parts:
 
-- **Daily find run.** Unattended: the scheduled task runs it every day. It searches, screens, records, and reports. It never opens an application form and never submits anything.
-- **Apply session.** Live, with the user present: the user replies `apply` to the report or says "ApplyPilot: apply". The agent fills each LinkedIn Easy Apply form, shows a short summary, and submits only after the user says yes.
+- **Daily run.** Unattended: the scheduled task runs it every day. It searches, screens, and records. When `auto_submit` is `true` (the default), it then sends LinkedIn Easy Apply applications on its own, but only ones where every answer on the form comes from something the user already confirmed. Last, it reports what it sent and what's waiting.
+- **Apply session.** Live, with the user present: the user replies `apply` to the report or says "ApplyPilot: apply". It handles the jobs that need the user (a new question, a lower fit, or everything when `auto_submit` is off). The agent fills each form, shows a short summary, and submits only after the user says yes.
 
-Everything follows `SKILL.md`: never guess high-impact facts, count only confirmed submissions, never bypass CAPTCHA, login, or security checks, and always stop before final submit.
+Everything follows `SKILL.md`: never guess high-impact facts, count only confirmed submissions, and never bypass CAPTCHA, login, or security checks. Stop before final submit everywhere except the daily run's "Auto-apply" step, which has its own stricter rules.
 
 ## Files
 
@@ -25,16 +25,16 @@ Tracker statuses use the core ApplyPilot states:
 
 | `status` | `next_action` | Meaning |
 |---|---|---|
-| `Pending` | `Easy Apply` | Good fit, Easy Apply, queued for the next apply session. |
+| `Pending` | `Easy Apply` | Good fit with Easy Apply. Sent by the daily run's auto-apply step if it qualifies; otherwise waits for an apply session. |
 | `Pending` | `Apply yourself` | Strong fit but not Easy Apply. Listed in the report with a link. |
-| `Needs user` | the exact question or action | A user-owned fact or action blocks this job. |
+| `Needs user` | the exact question or action | A user-owned fact or action blocks this job, including a form question auto-apply couldn't answer. |
 | `Skipped` | (empty) | Doesn't fit the rules. `reason` says why. |
 | `Blocked` | retry plan or `none` | The site interaction could not safely proceed. |
 | `Submitted` | (empty) | LinkedIn showed explicit confirmation. `evidence` records it. |
 
 Use the LinkedIn job ID (the number in `/jobs/view/<id>`) as `job_id`. It is the dedupe key.
 
-## Daily find run
+## Daily run
 
 ### 0. Pre-flight
 
@@ -79,39 +79,63 @@ Browse like a person: one tab at a time, no parallel scraping, and don't open mo
 3. Set `state.last_find_run` to now and `state.last_find_run_status` to `complete` in `settings.json`. If the run stopped early, use `stopped: <reason>`.
 4. Add one line to the run log in `notes.md`.
 
-### 4. Report
+### 4. Auto-apply
+
+Skip this step, and say why in the report, if:
+
+- `auto_submit` is not `true`, or
+- `linkedin.stored_resume_name` is empty. The resume isn't saved on LinkedIn yet, and uploading a file needs the user to allow it, so the first apply session has to do that.
+
+Otherwise:
+
+1. **How many.** Count `Submitted` rows whose `applied_at` is today in the user's `timezone`. Send at most `daily_cap` minus that.
+2. **Which jobs.** `Pending` / `Easy Apply` jobs with `fit` `High` or `Medium`, including leftovers from earlier days that are still open. High first, then newest. `Low` and `Stretch` jobs wait for the user.
+3. **For each job, one at a time:**
+   1. Open it. If it shows `Applied`, is closed, or no longer has Easy Apply, update the tracker and move on.
+   2. Click `Easy Apply` and fill each step by the same field rules as the apply session (its step 1.2), with one difference: **there's no one to ask.** The moment any field can't be filled from `profile.json` facts or `Confirmed: yes` rows in `answers.md`, with wording that clearly matches, stop this application:
+      - Click Dismiss and choose **Discard** (not Save).
+      - Mark the job `Needs user`, put the exact question in `next_action`, and add it to "Questions to ask the user" in `notes.md`.
+      - Move on to the next job.
+
+      These also count as "can't fill": contact info that doesn't match the profile, any resume other than `linkedin.stored_resume_name`, any file upload, a cover letter or written answer with no confirmed pattern, a pay question while `pay.policy` is `ask_me`, an unlisted skill while `answer_for_unlisted_skills` is unset, and any browser permission prompt.
+   3. **Check before sending.** On LinkedIn's review page, confirm the resume is `linkedin.stored_resume_name` and the work authorization and sponsorship answers match `profile.json`. If `linkedin.unfollow_company_on_submit` is `true`, uncheck "Follow {company}". If anything looks off, discard and mark `Needs user` as above.
+   4. **Send and confirm.** Click Submit. Count it only on explicit confirmation, the same as the apply session (its step 1.4). Write the key answers you used in the tracker's `notes` so the report can show them.
+   5. Close the tab and wait about a minute before the next job.
+4. Any stop condition (see "Stop conditions") ends auto-apply and the rest of the run at once. Set `state.last_find_run_status` to `stopped: <reason>`.
+
+### 5. Report
 
 Write `reports/YYYY-MM-DD.md` and show the same text as the final message. Keep it short and plain. No file paths, no jargon, no status codes.
 
 ```text
 ApplyPilot, {Weekday Mon D}
 
-Ready to apply: {n} · Apply yourself: {n} · Questions for you: {n} · Skipped: {n}
+Sent: {n} · Waiting for you: {n} · Apply yourself: {n} · Skipped: {n}
 
-Ready to apply (LinkedIn Easy Apply)
-1. {Company}, {Title} ({Location}), posted {x} hours ago
+Sent for you (LinkedIn Easy Apply)
+1. {Company}, {Title} ({Location}). Authorized: {…}, sponsorship: {…}{, any other key answer}
 ...
+
+Waiting for you
+- {Company}, {Title}: {the question in plain words, or "lower fit, want to apply?"}
 
 Worth applying yourself (company website)
 - {Company}, {Title}: {link}
 
-Questions for you
-- {plain question}? (asked by {Company})
-
-Reply "apply" and I'll go through the ready ones with you. It takes about {n × 1–2} minutes.
+Reply "apply" to go through the ones waiting for you. Each answer you give me gets reused, so fewer will wait next time.
 ```
 
-If nothing was found, say so in one line and mention when the next search will run. If the run stopped (paused, login needed, Chrome not reachable, LinkedIn warning), the report is just that one message and what the user should do.
+"Waiting for you" lists every open `Needs user` job and every `Pending` / `Easy Apply` job that wasn't sent, oldest first, up to `daily_cap`. If auto-apply was skipped, say why in one line at the top (for example, "I haven't sent anything yet because your resume isn't saved on LinkedIn. Reply 'apply' and we'll send the first one together."). If `auto_submit` is off, there's no "Sent" section.
 
-Include `Pending` / `Easy Apply` jobs left over from earlier days that are still open, oldest first, up to `daily_cap`.
+If nothing was found or sent, say so in one line and mention when the next search will run. If the run stopped (paused, login needed, Chrome not reachable, LinkedIn warning), the report is just that one message and what the user should do, plus anything already sent before the stop.
 
 ## Apply session
 
-Run this when the user replies `apply` to a report, says "ApplyPilot: apply", or asks to apply to specific jobs from the tracker. The user is present, so questions can be answered right away.
+Run this when the user replies `apply` to a report, says "ApplyPilot: apply", or asks to apply to specific jobs from the tracker. It covers the jobs that are waiting: `Needs user` jobs once their question is answered, `Pending` / `Easy Apply` jobs the daily run didn't send, and all of them when `auto_submit` is off. The user is present, so questions can be answered right away.
 
 ### 0. Pre-flight
 
-1. Check LinkedIn login the same way as the find run.
+1. Check LinkedIn login the same way as the daily run.
 2. Count today's `Submitted` rows. Only apply up to `daily_cap` in total for the day. If the cap is reached, say so and stop.
 3. If `notes.md` has open questions, ask them first, in one short batch. Save confirmed answers to `answers.md` (and facts to `profile.json`) before starting.
 
@@ -150,14 +174,14 @@ Then, if an update check is due, run "Updating ApplyPilot" below.
 
 ## Updating ApplyPilot
 
-An update changes the instructions every future run follows, so it only happens with the user present and only after they say yes. The daily find run never updates.
+An update changes the instructions every future run follows, so it only happens with the user present and only after they say yes. The daily run never updates.
 
-Check for an update when the user says "ApplyPilot: update", or at the end of an apply session when `updates` is `ask` and `state.last_update_check` is empty or more than 7 days ago. If `updates` is `off`, only check when the user asks.
+Check for an update when the user says "ApplyPilot: update". Also check, if `updates` is `ask` and `state.last_update_check` is empty or more than 7 days ago, at the end of an apply session or after handling any other "ApplyPilot: …" request. If `updates` is `off`, only check when the user asks.
 
 1. **Fetch without installing.**
    - `install_method` `git`: run `git -C <repo_path> fetch origin main`. If `HEAD` already matches `origin/main`, there's nothing new.
    - `install_method` `zip`: download `<repo_url>/archive/refs/heads/main.zip` into a new, empty temporary folder and unzip it there. Compare its `applypilot-main` folder with `repo_path`. If nothing differs, there's nothing new.
-2. **Read every changed file yourself.** If a change would loosen the safety contract (submitting without the user's yes, entering passwords or codes, getting past security checks, sending the user's data somewhere new, running downloaded scripts, or applying during unattended runs), don't install it. Tell the user in plain words what the change would do, and suggest they ask whoever shared ApplyPilot with them about it.
+2. **Read every changed file yourself.** If a change would loosen the safety contract (auto-submitting answers the user hasn't confirmed, raising the daily cap, entering passwords or codes, getting past security checks, sending the user's data somewhere new, or running downloaded scripts), don't install it. Tell the user in plain words what the change would do, and suggest they ask whoever shared ApplyPilot with them about it.
 3. **Ask.** Otherwise, say in one or two plain sentences what's new and ask: "Want me to install this update?"
 4. **Install only on yes.**
    - `git`: run `git -C <repo_path> merge --ff-only origin/main`.
@@ -189,7 +213,7 @@ https://www.linkedin.com/jobs/search/?keywords=<keywords>&location=<location>&f_
 | `keywords` | Role words, URL-encoded, e.g. `marketing%20intern`. |
 | `location` | City, state, or country, URL-encoded, e.g. `New%20York%2C%20NY` or `United%20States`. |
 | `f_JT=I` | Job type: Internship. If results are thin, try `f_E=1` (experience level: Internship) instead. |
-| `f_TPR=r<seconds>` | Posted within the last N seconds. `r86400` is 24 hours; the find run replaces it with the freshness window. |
+| `f_TPR=r<seconds>` | Posted within the last N seconds. `r86400` is 24 hours; the daily run replaces it with the freshness window. |
 | `f_WT=2` | Remote only. `1` is on-site and `3` is hybrid; combine with `%2C`, e.g. `f_WT=2%2C3`. |
 | `f_AL=true` | Easy Apply only. Not used by default, so strong non-Easy-Apply jobs can still be listed. |
 | `sortBy=DD` | Most recent first. |
@@ -205,7 +229,8 @@ When the user says "ApplyPilot: …" in a normal chat, make the change and confi
 | User says | Do this |
 |---|---|
 | "apply" | Start an apply session. |
-| "run now" | Run the daily find run now, even if it already ran today. |
+| "run now" | Run the daily run now (search, auto-apply, report), even if it already ran today. |
+| "stop auto-applying" / "start auto-applying" | Set `auto_submit` to `false` or `true`. When off, every application waits for an apply session. |
 | "also look for X" / "stop looking for X" | Add or remove a search in `settings.searches`. Show the new search in plain words. |
 | "skip anything …" | Add a plain-English rule to `settings.screening.skip_if`. |
 | "my answer to X is Y" | Save it to `answers.md` as confirmed, or to `profile.json` if it is a fact. |

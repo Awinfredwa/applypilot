@@ -1,4 +1,4 @@
 interface:
   display_name: "ApplyPilot"
-  short_description: "Daily LinkedIn job search, set up for you"
+  short_description: "Finds and applies to LinkedIn internships daily"
   default_prompt: "Use $applypilot to set up my daily LinkedIn internship search. My resume is attached."

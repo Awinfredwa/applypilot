@@ -11,6 +11,8 @@
   "timezone": "",
   "_run_time": "24-hour HH:MM in the user's own timezone (the 'timezone' field). The Codex scheduled task uses this same local time.",
   "run_time": "12:30",
+  "_auto_submit": "true: the daily run sends Easy Apply applications on its own, but only when every answer on the form comes from a confirmed fact or answer. Anything else waits for the user. false: every application waits for an apply session.",
+  "auto_submit": true,
   "daily_cap": 10,
   "apply_yourself_picks_per_day": 3,
   "linkedin": {

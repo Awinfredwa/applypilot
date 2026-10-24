@@ -14,13 +14,13 @@ Check this first:
 | Situation | Read and follow |
 |---|---|
 | The user pasted the README quick-start message ("Set up ApplyPilot for me …"), or wants the simple daily LinkedIn routine | `references/quickstart-setup.md` |
-| The scheduled task says "Run my ApplyPilot daily job search" | `references/daily-linkedin-run.md`, section "Daily find run" |
+| The scheduled task says "Run my ApplyPilot daily job search" | `references/daily-linkedin-run.md`, section "Daily run" |
 | A quick-start user replies `apply` to a report, or says "ApplyPilot: …" (apply, pause, add a search, answer a question, and so on) | `references/daily-linkedin-run.md`, sections "Apply session" and "Changing things later" |
 | Anything else: multiple job sites, resume tailoring, Precision/Volume modes, the full dashboard | The rest of this file |
 
 Quick-start users are often not technical. Do all file, folder, and repo work yourself, and talk in plain language. Their private files live in their ApplyPilot folder (usually `~/ApplyPilot`), never in this repo.
 
-The Core Contract and Safety sections below apply to every path. In particular, the unattended daily run only finds and screens jobs, and every application is submitted only after the user says yes to its summary.
+The Core Contract and Safety sections below apply to every path. One exception is scoped to the quick start: when `auto_submit` is on (the default), the scheduled daily run may submit LinkedIn Easy Apply applications without asking, but only when every answer on the form comes from a fact or answer the user already confirmed. Anything else waits for the user. The full workflow below always stops before final submit.
 
 ## Core Contract
 
