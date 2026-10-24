@@ -4,7 +4,7 @@ Reusable answers for LinkedIn Easy Apply questions. The profile stores facts; th
 
 Rules for the agent:
 
-- Use an answer only when `Confirmed` is `yes`. The user confirmed it once, in their own words or by approving a draft.
+- Use an answer only when `Confirmed` is `yes`. That means the user confirmed it once, in their own words or by approving a draft. The two rows that ship as `yes` ("How did you hear about this job?" and voluntary self-ID) are safe defaults, and setup tells the user about the self-ID one. The user can change either anytime.
 - If a question doesn't match any row closely, ask the user during the apply session and add the answer here after they confirm it.
 - Never add new claims such as skills, numbers, dates, visa facts, or pay that the user hasn't confirmed.
 

@@ -10,7 +10,7 @@
 
 1. 从 [chatgpt.com/download](https://chatgpt.com/download) 下载 **ChatGPT 桌面版**，登录后打开 **Codex**。
 2. 在 Chrome 里安装 **[Codex 扩展](https://chromewebstore.google.com/detail/codex/hehggadaopoacecdllhhajmbjkdcmajg)**，并确认已登录 **LinkedIn**。
-3. 在 Codex 里选择模型 **GPT-6 Sol**，effort 设为 **High**。
+3. 在 Codex 里保持默认模型，effort 设为 **High**。
 4. 上传你的简历，复制下面这段话，把空白处填好后发送：
 
    ```text
@@ -54,7 +54,8 @@
 - **它不会编造任何信息。** 工作许可、薪资、GPA、日期都只用你提供的。不知道就问你。
 - **没有你的同意不会提交。** 每一份申请都由你确认。
 - **它不会替你过安全验证。** 验证码、登录码、人机验证都需要你自己处理。遇到时它会停下来告诉你。
-- **对 LinkedIn 温和一点。** LinkedIn 不喜欢自动化工具。ApplyPilot 保持正常节奏（默认每天 10 个），LinkedIn 一出现警告就暂停 2 天。账号终究是你的，你随时可以调低上限。
+- **这违反 LinkedIn 的规则，所以账号有一定风险。** LinkedIn 用户协议不允许使用机器人或自动化工具，LinkedIn 可能会限制使用这类工具的账号。ApplyPilot 保持缓慢、像真人一样的节奏（一次只开一个页面，默认每天最多 10 个申请，每一个都由你确认），LinkedIn 一出现警告就暂停 2 天。这能降低风险，但不能完全消除。账号是你的，请自己判断是否接受，也可以随时调低上限。
+- **只有你同意，它才会更新自己。** 大约每周它可能会问你“要安装这个更新吗？”。每天的自动搜索从不修改自己的指令。
 - **你的信息只存在你的电脑上。** 简历、答案和记录都在你的 ApplyPilot 文件夹里，不会进入这个 repo。
 
 ---

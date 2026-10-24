@@ -10,7 +10,7 @@ An AI assistant that checks LinkedIn for new internships every day, picks the on
 
 1. Download the **ChatGPT desktop app** from [chatgpt.com/download](https://chatgpt.com/download), sign in, and open **Codex**.
 2. In Google Chrome, add the **[Codex extension](https://chromewebstore.google.com/detail/codex/hehggadaopoacecdllhhajmbjkdcmajg)** and make sure you're logged into **LinkedIn**.
-3. In Codex, pick the model **GPT-6 Sol** and set the effort to **High**.
+3. In Codex, keep the default model and set the effort to **High**.
 4. Attach your resume, paste this message, and fill in the blank:
 
    ```text
@@ -52,7 +52,8 @@ Your records are in the **ApplyPilot** folder in your home folder. `tracker.csv`
 - **It never makes things up.** Work authorization, pay, GPA, and dates come only from you. If it doesn't know, it asks.
 - **Nothing is sent without your OK.** You approve every application.
 - **It won't get past security checks for you.** CAPTCHAs, login codes, and "are you a robot" checks are yours. It stops and tells you.
-- **Be gentle with LinkedIn.** LinkedIn doesn't like automated tools. ApplyPilot keeps a normal pace (10 applications a day by default) and pauses for 2 days if LinkedIn shows any warning. It's still your account, so you can lower the limit anytime.
+- **This is against LinkedIn's rules, so there's some risk to your account.** LinkedIn's User Agreement doesn't allow bots or automated tools, and LinkedIn can restrict accounts that use them. ApplyPilot keeps a slow, human pace (one page at a time, 10 applications a day by default, each one approved by you) and stops for 2 days if LinkedIn shows any warning. That lowers the risk but doesn't remove it. It's your account, so decide if you're comfortable, and lower the limit anytime.
+- **It only updates itself when you say yes.** Every week or so it may ask "Want me to install this update?" The daily search never changes its own instructions.
 - **Your info stays on your computer.** Your resume, answers, and history live in your ApplyPilot folder, never in this repo.
 
 ---

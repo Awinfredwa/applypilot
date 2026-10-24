@@ -15,7 +15,7 @@ Everything in `SKILL.md` still applies: never guess high-impact facts, stop befo
 ## What the finished setup looks like
 
 ```text
-<skills folder>/applypilot/   ← this repo: instructions only; updated automatically
+<skills folder>/applypilot/   ← this repo: instructions only; updated only when the user says yes
 ~/ApplyPilot/                 ← the user's private folder; never inside the repo
    AGENTS.md  profile.json  settings.json  answers.md  tracker.csv  notes.md
    resume/  reports/
@@ -32,13 +32,13 @@ Don't narrate this step beyond one line such as "Setting things up on your compu
 1. Detect the OS (macOS or Windows) and the user's home folder.
 2. Choose the skills folder: `~/.agents/skills/` (current Codex location for personal skills). If this Codex version still uses the legacy `~/.codex/skills/` instead, use that. The repo goes in `<skills folder>/applypilot`.
 3. Get the repo from `https://github.com/Awinfredwa/applypilot`:
-   - If it already exists there, update it instead (see the update step in `daily-linkedin-run.md`).
+   - If it already exists there, keep it. Once the rest of setup is done, offer an update following "Updating ApplyPilot" in `daily-linkedin-run.md`.
    - If git is available **without triggering an install prompt**, `git clone` it. On macOS, check `xcode-select -p` first; if it fails, don't run `git`, because that opens a developer-tools install dialog. Use the zip instead.
    - Otherwise download `https://github.com/Awinfredwa/applypilot/archive/refs/heads/main.zip`, unzip it, and move the `applypilot-main` folder's contents to `<skills folder>/applypilot`. On macOS use `curl` and `unzip`; on Windows use PowerShell `Invoke-WebRequest` and `Expand-Archive`.
 4. Create `~/ApplyPilot/` with `resume/` and `reports/` inside. If it already exists with files, **don't overwrite anything**: this is a re-setup, so read the existing files and only fill gaps.
 5. Copy the templates from `templates/internship/`: `profile.template.json` to `profile.json`, `settings.template.json` to `settings.json`, `answers.template.md` to `answers.md`, `tracker.template.csv` to `tracker.csv`, and `notes.template.md` to `notes.md`.
 6. Save the user's resume into `~/ApplyPilot/resume/` with its original file name.
-7. Fill `settings.json`: `repo_path`, `workspace_path`, `install_method` (`git` or `zip`), `os`, and `timezone` (from the system).
+7. Fill `settings.json`: `repo_path`, `workspace_path`, `install_method` (`git` or `zip`), `os`, `timezone` (from the system), and `state.installed_version` (the commit ID for `git`, or `main.zip from {date}` for `zip`).
 8. Copy `templates/internship/workspace_AGENTS.template.md` to `~/ApplyPilot/AGENTS.md` and fill in `{{REPO_PATH}}`. Then any Codex chat or scheduled task opened in the ApplyPilot folder knows where its instructions are, even if skill discovery fails.
 
 If there is no resume attached, ask for it before going further ("Please attach your resume (PDF or Word) and I'll take it from there."). If the user didn't say what jobs they want, ask that in the first question batch.
@@ -82,7 +82,9 @@ Most companies post jobs on weekday mornings in their local time. A search aroun
 
 - If the user's laptop is usually on at midday, use 12:30pm.
 - Otherwise use a time it's reliably on, such as early evening (about 7pm).
-- If the job market is in a different timezone from the user, convert and say both times.
+- If the job market is in a different timezone from the user, convert and say both times. For example, 12:30pm in New York is 9:30am for a user in California.
+
+Always save `run_time` in the user's own timezone (the `timezone` field), because that's the clock the Codex scheduled task uses.
 
 ## Step 4: LinkedIn and Chrome check (with the user)
 
@@ -91,6 +93,7 @@ Most companies post jobs on weekday mornings in their local time. A search aroun
    - If the extension isn't installed or connected, walk the user through it in plain steps: install "Codex" from the Chrome Web Store, sign in, and turn it on.
 2. If LinkedIn isn't logged in, ask the user to log in themselves in Chrome. Never type their password.
 3. Save the logged-in account's display name to `settings.linkedin.account_name`.
+4. Before the practice search, tell the user once, plainly, and wait for an OK: "One thing to know first: LinkedIn's rules don't allow automated tools, and LinkedIn can restrict accounts that use them. I keep a slow, human pace, you approve every application, and I stop for 2 days if LinkedIn shows any warning. That lowers the risk but doesn't remove it. Do you want to go ahead?" If they say no, stop setup and tell them nothing has been sent.
 
 ## Step 5: Practice search (no applying)
 
@@ -116,7 +119,7 @@ If the user doesn't want to send a real application yet, skip this step. The fir
    - Name: `ApplyPilot daily search`
    - Schedule: every day at `run_time`
    - Folder or project: the user's ApplyPilot folder
-   - Model: the same one the user is using (the README recommends GPT-6 Sol, High effort)
+   - Model and effort: the same ones the user is using in this chat (the README recommends the default model with High effort)
    - Prompt: the filled-in text from `daily_task_prompt.md`
 3. If you can create scheduled tasks directly, do it and confirm. If you can't, copy the prompt to the clipboard (`pbcopy` on macOS, `Set-Clipboard` on Windows) and give the user short click-by-click steps: in the Codex sidebar, open the scheduled tasks area (called Automations or Scheduled tasks), create a new one, paste the prompt, pick the time, and save. Then verify it exists before moving on.
 4. Set `state.setup_complete` to `true` in `settings.json`.

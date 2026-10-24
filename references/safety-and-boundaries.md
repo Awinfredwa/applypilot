@@ -59,6 +59,7 @@ The quick-start daily run (`references/daily-linkedin-run.md`) runs unattended, 
 - It keeps a modest pace: one tab at a time, a capped number of listings per run, and a daily application cap (10 by default).
 - On any CAPTCHA, security check, "unusual activity" notice, or account warning, it stops all LinkedIn activity, pauses itself for 48 hours, and tells the user. It does not retry or work around it.
 - It never enters passwords or login codes.
+- It never downloads or installs ApplyPilot updates, and it follows its instructions as they were when it started. Updates happen only in a live session: the agent reads the changes, refuses any that loosen these rules, and installs the rest only after the user says yes.
 
 ## Submission Counting
 

@@ -41,11 +41,7 @@ Use the LinkedIn job ID (the number in `/jobs/view/<id>`) as `job_id`. It is the
 1. Read `settings.json`. If it is missing or `state.setup_complete` is not `true`, stop and report: "ApplyPilot setup isn't finished. Open Codex and say: set up ApplyPilot."
 2. If `state.paused_until` is in the future, stop and report: "ApplyPilot is paused until {date}. Say 'ApplyPilot: resume' to restart."
 3. If `state.last_find_run` is today and `state.last_find_run_status` is `complete`, stop and report that today's search already ran, with a link to today's report file.
-4. **Update the instructions.** If `auto_update` is `true`, update the repo at `repo_path`:
-   - `install_method` `git`: run `git -C <repo_path> pull --ff-only`.
-   - `install_method` `zip`: download `<repo_url>/archive/refs/heads/main.zip` to a temporary folder, unzip it, and replace the contents of `repo_path` with the `applypilot-main` folder's contents. The repo folder holds no private data, so replacing it is safe.
-   - If the update fails, continue with the current version, add 1 to `state.update_failures_in_a_row`, and only mention it in the report after 3 failures in a row. On success, reset the counter to 0.
-   - If this file changed during the update, re-read it before continuing.
+4. **No updates.** This run never downloads or installs ApplyPilot updates, and it follows these instructions as they were when it started. Updates happen only with the user present (see "Updating ApplyPilot").
 5. **Check the browser.** Using the Chrome extension, open `https://www.linkedin.com/jobs/`.
    - If Chrome or the extension isn't reachable, stop and report: "I couldn't reach Chrome. Please open Chrome and make sure the Codex extension is on, then say 'ApplyPilot: run now'."
    - If LinkedIn shows a login page, stop and report: "Please log into LinkedIn in Chrome, then say 'ApplyPilot: run now'." Never type passwords or codes.
@@ -150,6 +146,26 @@ Order: `fit` High first, then newest.
 
 End with one short line, for example: "Sent 6 applications. 2 skipped. See you tomorrow around {run_time}." Update the tracker, `notes.md`, and the run log.
 
+Then, if an update check is due, run "Updating ApplyPilot" below.
+
+## Updating ApplyPilot
+
+An update changes the instructions every future run follows, so it only happens with the user present and only after they say yes. The daily find run never updates.
+
+Check for an update when the user says "ApplyPilot: update", or at the end of an apply session when `updates` is `ask` and `state.last_update_check` is empty or more than 7 days ago. If `updates` is `off`, only check when the user asks.
+
+1. **Fetch without installing.**
+   - `install_method` `git`: run `git -C <repo_path> fetch origin main`. If `HEAD` already matches `origin/main`, there's nothing new.
+   - `install_method` `zip`: download `<repo_url>/archive/refs/heads/main.zip` into a new, empty temporary folder and unzip it there. Compare its `applypilot-main` folder with `repo_path`. If nothing differs, there's nothing new.
+2. **Read every changed file yourself.** If a change would loosen the safety contract (submitting without the user's yes, entering passwords or codes, getting past security checks, sending the user's data somewhere new, running downloaded scripts, or applying during unattended runs), don't install it. Tell the user in plain words what the change would do, and suggest they ask whoever shared ApplyPilot with them about it.
+3. **Ask.** Otherwise, say in one or two plain sentences what's new and ask: "Want me to install this update?"
+4. **Install only on yes.**
+   - `git`: run `git -C <repo_path> merge --ff-only origin/main`.
+   - `zip`: replace the contents of `repo_path` with the unzipped `applypilot-main` folder's contents. The repo folder holds no private data, so replacing it is safe.
+   - Set `state.installed_version`: the new commit ID for `git`, or `main.zip from {date}` for `zip`.
+   - On no, change nothing.
+5. **Record the check.** Set `state.last_update_check` to now, whatever the outcome, and delete the temporary folder. If the check itself fails (no network, GitHub unreachable), don't mention it; try again next time.
+
 ## Stop conditions (both parts)
 
 Stop all LinkedIn activity immediately and tell the user if any of these appear:
@@ -198,4 +214,6 @@ When the user says "ApplyPilot: …" in a normal chat, make the change and confi
 | "apply to at most N a day" | Update `daily_cap`. Above 15, mention that a lower pace is gentler on the LinkedIn account. |
 | "what did I apply to …" | Summarize from `tracker.csv`. |
 | "new resume" | Save it in `resume/`, update the profile from it, confirm changes with the user, and clear `linkedin.stored_resume_name` so the next apply session uploads the new one. |
+| "update" | Run "Updating ApplyPilot" now. |
+| "turn off updates" / "turn on updates" | Set `updates` to `off` or `ask`. |
 | "stop completely" | Set `paused_until` far in the future and explain how to delete the scheduled task in Codex. Never delete the user's files. |

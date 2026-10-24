@@ -5,9 +5,11 @@
   "repo_path": "",
   "workspace_path": "",
   "install_method": "",
-  "auto_update": true,
+  "_updates": "'ask': check for new ApplyPilot instructions only while the user is present, and install them only after the user says yes. 'off': never check. Unattended daily runs never update.",
+  "updates": "ask",
   "os": "",
   "timezone": "",
+  "_run_time": "24-hour HH:MM in the user's own timezone (the 'timezone' field). The Codex scheduled task uses this same local time.",
   "run_time": "12:30",
   "daily_cap": 10,
   "apply_yourself_picks_per_day": 3,
@@ -47,6 +49,7 @@
     "last_find_run": "",
     "last_find_run_status": "",
     "paused_until": "",
-    "update_failures_in_a_row": 0
+    "installed_version": "",
+    "last_update_check": ""
   }
 }
